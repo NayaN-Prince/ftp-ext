@@ -1,0 +1,31 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient48" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow48" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.2)"/>
+    </filter>
+  </defs>
+  
+  <!-- Background circle with shadow -->
+  <circle cx="24" cy="24" r="24" fill="url(#gradient48)" filter="url(#shadow48)"/>
+  
+  <!-- Shield shape -->
+  <path d="M24 8L16 12V20C16 28 20 34 24 36C28 34 32 28 32 20V12L24 8Z" 
+        fill="white" fill-opacity="0.95"/>
+  
+  <!-- Upload arrow -->
+  <path d="M24 16V28M20 20L24 16L28 20" 
+        stroke="url(#gradient48)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Data transfer lines -->
+  <path d="M18 24H19M29 24H30M18 26H20M28 26H30" 
+        stroke="url(#gradient48)" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Lock accent -->
+  <rect x="22" y="28" width="4" height="4" rx="1" fill="url(#gradient48)" fill-opacity="0.8"/>
+  <path d="M23 28V27C23 26.5 23.5 26 24 26C24.5 26 25 26.5 25 27V28" 
+        stroke="url(#gradient48)" stroke-width="1" fill="none"/>
+</svg>

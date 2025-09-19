@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure SFTP Transfer - Web Interface</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    Secure SFTP Transfer
+                </a>
+                
+                <div class="navbar-nav ms-auto" id="navUser">
+                    <div class="nav-item dropdown d-none" id="userMenu">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>
+                            <span id="navUsername">User</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" id="logoutNavBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </div>
+                    
+                    <button class="btn btn-outline-light btn-sm" id="loginNavBtn">
+                        <i class="fas fa-sign-in-alt me-1"></i>
+                        Login
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Login Modal -->
+        <div class="modal fade" id="loginModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-lock me-2"></i>
+                            Secure Login
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label for="loginUsername" class="form-label">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="loginUsername" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="loginPassword" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input type="password" class="form-control" id="loginPassword" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    All transfers are encrypted with AES and compressed for security.
+                                </small>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" form="loginForm">
+                            <i class="fas fa-sign-in-alt me-1"></i>
+                            Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Modal -->
+        <div class="modal fade" id="registerModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-user-plus me-2"></i>
+                            Create Account
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="registerForm">
+                            <div class="mb-3">
+                                <label for="regUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="regUsername" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="regEmail" class="form-label">Email (Optional)</label>
+                                <input type="email" class="form-control" id="regEmail">
+                            </div>
+                            <div class="mb-3">
+                                <label for="regPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="regPassword" required>
+                                <div class="form-text">Password must be at least 8 characters long.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="regPasswordConfirm" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="regPasswordConfirm" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" form="registerForm">
+                            <i class="fas fa-user-plus me-1"></i>
+                            Register
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container mt-4">
+            <!-- Welcome Section -->
+            <div id="welcomeSection">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <div class="hero-section">
+                            <i class="fas fa-cloud-upload-alt hero-icon"></i>
+                            <h1 class="display-4 fw-bold mb-4">Secure File Transfer</h1>
+                            <p class="lead mb-4">
+                                Transfer files securely with AES encryption and advanced compression. 
+                                Your files are protected during transit and storage.
+                            </p>
+                            
+                            <div class="row features mb-4">
+                                <div class="col-md-4">
+                                    <div class="feature-card">
+                                        <i class="fas fa-lock feature-icon"></i>
+                                        <h5>AES Encryption</h5>
+                                        <p>End-to-end encryption for maximum security</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="feature-card">
+                                        <i class="fas fa-compress feature-icon"></i>
+                                        <h5>Smart Compression</h5>
+                                        <p>Advanced Gzip compression reduces file sizes</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="feature-card">
+                                        <i class="fas fa-chart-line feature-icon"></i>
+                                        <h5>Real-time Progress</h5>
+                                        <p>Monitor your transfers with live progress bars</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button class="btn btn-primary btn-lg me-3" id="showLoginBtn">
+                                    <i class="fas fa-sign-in-alt me-2"></i>
+                                    Login
+                                </button>
+                                <button class="btn btn-outline-primary btn-lg" id="showRegisterBtn">
+                                    <i class="fas fa-user-plus me-2"></i>
+                                    Register
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Interface (Hidden by default) -->
+            <div id="mainInterface" class="d-none">
+                <div class="row">
+                    <!-- Upload Section -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-upload me-2"></i>
+                                    Upload Files
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="upload-area" id="uploadArea">
+                                    <div class="upload-content">
+                                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                        <h6>Drag & Drop Files Here</h6>
+                                        <p class="text-muted">or click to browse</p>
+                                        <input type="file" id="fileInput" multiple hidden>
+                                        <button class="btn btn-primary" id="selectFilesBtn">
+                                            <i class="fas fa-folder-open me-2"></i>
+                                            Select Files
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div id="fileList" class="file-list d-none">
+                                    <h6 class="mt-3">Selected Files:</h6>
+                                    <div id="selectedFiles"></div>
+                                    <div class="mt-3">
+                                        <button class="btn btn-success" id="uploadBtn">
+                                            <i class="fas fa-upload me-2"></i>
+                                            Upload Files
+                                        </button>
+                                        <button class="btn btn-secondary ms-2" id="clearFilesBtn">
+                                            <i class="fas fa-times me-2"></i>
+                                            Clear
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transfer Status -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-tasks me-2"></i>
+                                    Transfer Status
+                                </h5>
+                                <button class="btn btn-sm btn-outline-primary refresh-btn" id="refreshTransfersBtn">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="transferStatus">
+                                    <div class="empty-state">
+                                        <i class="fas fa-inbox"></i>
+                                        <p>No active transfers</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transfers -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-history me-2"></i>
+                                    Recent Transfers
+                                </h5>
+                                <button class="btn btn-sm btn-outline-primary refresh-btn" id="refreshHistoryBtn">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="transfersTable">
+                                        <thead>
+                                            <tr>
+                                                <th>File</th>
+                                                <th>Type</th>
+                                                <th>Size</th>
+                                                <th>Compressed</th>
+                                                <th>Ratio</th>
+                                                <th>Date</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="transfersTableBody">
+                                            <tr>
+                                                <td colspan="7" class="text-center">
+                                                    <div class="empty-state-small">
+                                                        <i class="fas fa-inbox"></i>
+                                                        <p>No transfers yet</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer">
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="static/script.js"></script>
+</body>
+</html>

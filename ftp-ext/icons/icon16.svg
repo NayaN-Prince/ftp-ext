@@ -1,0 +1,22 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient16" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="8" cy="8" r="8" fill="url(#gradient16)"/>
+  
+  <!-- Shield shape -->
+  <path d="M8 2L5 3.5V7C5 9.5 6.5 11.5 8 12C9.5 11.5 11 9.5 11 7V3.5L8 2Z" 
+        fill="white" fill-opacity="0.9"/>
+  
+  <!-- Upload arrow -->
+  <path d="M8 5V9M6.5 6.5L8 5L9.5 6.5" 
+        stroke="url(#gradient16)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Lock accent -->
+  <circle cx="8" cy="8.5" r="0.5" fill="url(#gradient16)"/>
+</svg>
